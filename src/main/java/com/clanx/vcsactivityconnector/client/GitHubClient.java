@@ -27,6 +27,24 @@ public interface GitHubClient {
             @RequestHeader("Authorization") String token,
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo,
-            @RequestParam(value = "per_page", defaultValue = "20") int limit
+            @RequestParam(value = "per_page", defaultValue = "20") int limit,
+            @RequestParam(value = "page", defaultValue = "1") int page
+    );
+
+    @GetMapping("/users/{username}/repos")
+    List<RepositoryDto> getReposByUsername(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("username") String username,
+            @RequestParam(value = "per_page", defaultValue = "100") int perPage,
+            @RequestParam(value = "page", defaultValue = "1") int page
+    );
+
+    @GetMapping("/repos/{owner}/{repo}/commits")
+    List<CommitDto> getCommits(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @RequestParam("per_page") int limit,
+            @RequestParam("page") int page
     );
 }

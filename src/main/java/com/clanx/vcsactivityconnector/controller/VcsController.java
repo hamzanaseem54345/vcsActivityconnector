@@ -2,8 +2,10 @@ package com.clanx.vcsactivityconnector.controller;
 
 
 import com.clanx.vcsactivityconnector.dto.CommitDto;
+import com.clanx.vcsactivityconnector.dto.RepositoryDto;
 import com.clanx.vcsactivityconnector.factory.ConnectorFactory;
 import com.clanx.vcsactivityconnector.service.VcsConnector;
+import com.clanx.vcsactivityconnector.service.impl.GitHubConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -39,12 +41,15 @@ public class VcsController {
             @RequestParam String provider,
             @RequestHeader("Authorization") String token,
             @RequestParam String repo,
-            @RequestParam(defaultValue = "20") int limit
+            @RequestParam(required = false) String owner,
+            @RequestParam(defaultValue = "20") int limit,
+            @RequestParam(defaultValue = "1") int pageNumber
     ) {
         String cleanToken = extractToken(token);
         VcsConnector connector = connectorFactory.getConnector(provider);
-        return connector.getRecentCommits(cleanToken,repo, limit);
+        return connector.getCommits(cleanToken, repo, owner, limit, pageNumber);
     }
+
 
     private String extractToken(String header) {
         if (header == null || !header.startsWith("Bearer ")) {
